@@ -1,0 +1,38 @@
+package sml;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class SubInstructionTest {
+
+    private Machine testMachine;
+    private Registers testReg;
+    Instruction testSubInst;
+
+    @Before
+    public void setUp() throws Exception {
+        testMachine = new Machine();
+        testReg = testMachine.getRegisters();
+        testReg.setRegister(6,465);
+        testReg.setRegister(8,215);
+        testReg.setRegister(21,14);
+        testSubInst = new SubInstruction("test0",21,465,215);
+    }
+
+    @Test
+    public void testExecute() throws Exception {
+        try {
+            testSubInst.execute(testMachine);
+            assertEquals(250, testReg.getRegister(21));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToString() throws Exception {
+
+    }
+}
