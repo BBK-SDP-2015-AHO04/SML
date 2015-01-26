@@ -14,6 +14,7 @@ public class SubInstructionTest {
     @Before
     public void setUp() throws Exception {
         testMachine = new Machine();
+        testMachine.setRegisters(new Registers());
         testReg = testMachine.getRegisters();
         testReg.setRegister(6,465);
         testReg.setRegister(8,215);
@@ -33,6 +34,6 @@ public class SubInstructionTest {
 
     @Test
     public void testToString() throws Exception {
-
+        assertEquals("test0: sub 465 - 215 to 21",testSubInst.toString());
     }
 }
