@@ -1,7 +1,11 @@
-package sml;
+package smltests;
 
 import org.junit.Before;
 import org.junit.Test;
+import sml.Instruction;
+import sml.Machine;
+import sml.Registers;
+import sml.SubInstruction;
 
 import static org.junit.Assert.*;
 
