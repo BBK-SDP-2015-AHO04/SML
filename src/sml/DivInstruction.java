@@ -22,12 +22,13 @@ public class DivInstruction extends Instruction {
 
     @Override
     public void execute(Machine m) {
+        if(m == null) throw new NullPointerException("The machine object passed as a parameter was null!");
+        if(m.getRegisters() == null) throw new NullPointerException("The registers object you tried to access was null!");
         try {
             int value1 = m.getRegisters().getRegister(op1);
             int value2 = m.getRegisters().getRegister(op2);
             m.getRegisters().setRegister(result, value1 / value2);
-        } catch (NullPointerException ex){
-            System.out.println("The machine object passed as a parameter was null!");
+        } catch (ArrayIndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
     }

@@ -20,11 +20,12 @@ public class OutInstruction extends Instruction {
 
     @Override
     public void execute(Machine m) {
+        if(m == null) throw new NullPointerException("The machine object passed as a parameter was null!");
+        if(m.getRegisters() == null) throw new NullPointerException("The registers object you tried to access was null!");
         try {
             value = m.getRegisters().getRegister(op1);
             System.out.println("The contents of register " + op1 + " is: " + value);
-        } catch (NullPointerException ex){
-            System.out.println("The machine object passed as a parameter was null!");
+        } catch (ArrayIndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
     }
