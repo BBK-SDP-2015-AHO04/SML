@@ -25,7 +25,7 @@ public class BnzInstruction extends Instruction {
         try {
             if(m.getRegisters().getRegister(register) != 0){
 
-                int branchIndex = m.getLabels(nextInstructionLabel);
+                int branchIndex = m.getLabels().indexOf(nextInstructionLabel);
                 m.setPc(branchIndex);
             }
         } catch (ArrayIndexOutOfBoundsException ex){
