@@ -22,9 +22,14 @@ public class MulInstruction extends Instruction {
 
     @Override
     public void execute(Machine m) {
-        int value1 = m.getRegisters().getRegister(op1);
-        int value2 = m.getRegisters().getRegister(op2);
-        m.getRegisters().setRegister(result, value1 * value2);
+        try {
+            int value1 = m.getRegisters().getRegister(op1);
+            int value2 = m.getRegisters().getRegister(op2);
+            m.getRegisters().setRegister(result, value1 * value2);
+        } catch (NullPointerException ex){
+            System.out.println("The machine object passed as a parameter was null!");
+            ex.printStackTrace();
+        }
     }
 
     @Override

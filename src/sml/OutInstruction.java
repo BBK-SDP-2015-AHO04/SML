@@ -15,6 +15,7 @@ public class OutInstruction extends Instruction {
     public OutInstruction(String label, int op1) {
         this(label, "out");
         this.op1 = op1;
+        value = 0;
     }
 
     @Override
@@ -30,6 +31,6 @@ public class OutInstruction extends Instruction {
 
     @Override
     public String toString() {
-        return super.toString() + " - The contents of register " + op1 + " is: " + value;
+        return super.toString() + " - The contents of register " + op1 + " will be printed to screen.";
     }
 }

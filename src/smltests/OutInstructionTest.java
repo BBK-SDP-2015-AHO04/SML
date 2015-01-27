@@ -43,7 +43,7 @@ public class OutInstructionTest {
     public void testExecute() throws Exception {
         try {
             testOutInst.execute(testMachine);
-            assertEquals(465, outContent.toString());
+            assertEquals("The contents of register 6 is: 465\n", outContent.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,6 +51,6 @@ public class OutInstructionTest {
 
     @Test
     public void testToString() throws Exception {
-        assertEquals("test0: out - The contents of register 6 is: 465",testOutInst.toString());
+        assertEquals("test0: out - The contents of register 6 will be printed to screen.",testOutInst.toString());
     }
 }

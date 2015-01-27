@@ -23,7 +23,7 @@ public class SubInstructionTest {
         testReg.setRegister(6,465);
         testReg.setRegister(8,215);
         testReg.setRegister(21,14);
-        testSubInst = new SubInstruction("test0",21,465,215);
+        testSubInst = new SubInstruction("test0",21,6,8);
     }
 
     @Test
@@ -38,6 +38,6 @@ public class SubInstructionTest {
 
     @Test
     public void testToString() throws Exception {
-        assertEquals("test0: sub 465 - 215 to 21",testSubInst.toString());
+        assertEquals("test0: sub 6 - 8 to 21",testSubInst.toString());
     }
 }

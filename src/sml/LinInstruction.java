@@ -23,7 +23,12 @@ public class LinInstruction extends Instruction {
 
 	@Override
 	public void execute(Machine m) {
-		m.getRegisters().setRegister(register, value);
+		try {
+			m.getRegisters().setRegister(register, value);
+		} catch (NullPointerException ex){
+			System.out.println("The machine object passed as a parameter was null!");
+			ex.printStackTrace();
+		}
 	}
 
 	@Override
