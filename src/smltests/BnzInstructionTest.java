@@ -18,18 +18,27 @@ public class BnzInstructionTest {
     public void setUp() throws Exception {
         testMachine = new Machine();
         testMachine.setRegisters(new Registers());
+        testMachine.setPc(0);
         testReg = testMachine.getRegisters();
+        Labels testLabels  = new Labels();
         ArrayList<Instruction> testInstr = new ArrayList<>();
         testInstr.add(new LinInstruction("test1",1,5));
+        testLabels.addLabel("test1");
         testInstr.add(new LinInstruction("test2",2,1));
+        testLabels.addLabel("test2");
         testInstr.add(new LinInstruction("test3",3,1));
+        testLabels.addLabel("test3");
         testInstr.add(new MulInstruction("test4",2,1,2));
+        testLabels.addLabel("test4");
         testInstr.add(new SubInstruction("test5",1,1,3));
+        testLabels.addLabel("test5");
         testBnzInst = (new BnzInstruction("test6",1,"test4"));
         testInstr.add(testBnzInst);
+        testLabels.addLabel("test6");
         testInstr.add(new OutInstruction("test7",2));
+        testLabels.addLabel("test7");
         testMachine.setProg(testInstr);
-        testMachine.setPc(0);
+        testMachine.setLabels(testLabels);
     }
 
     @Test
