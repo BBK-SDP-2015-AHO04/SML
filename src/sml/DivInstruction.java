@@ -27,7 +27,11 @@ public class DivInstruction extends Instruction {
         try {
             int value1 = m.getRegisters().getRegister(op1);
             int value2 = m.getRegisters().getRegister(op2);
-            m.getRegisters().setRegister(result, value1 / value2);
+            if(value2 == 0){
+                System.out.println("The value in register " + op2 + " is zero...Cannot divide by zero!");
+            } else {
+                m.getRegisters().setRegister(result, value1 / value2);
+            }
         } catch (ArrayIndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
