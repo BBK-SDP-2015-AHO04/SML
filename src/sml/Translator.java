@@ -82,6 +82,11 @@ public class Translator {
 			return null;
 
 		String ins = scan();
+
+        //ReflectionInstanceGenerator rig = new ReflectionInstanceGenerator(this,ins);
+        //or
+        //Instruction reflectionInstanceGenerator(ins);
+
 		switch (ins) {
 		case "add":
 			r = scanInt();
@@ -115,11 +120,19 @@ public class Translator {
 			String nextLabel = scan();
 			return new BnzInstruction(label,s1,nextLabel);
 		}
-
-		// You will have to write code here for the other instructions.
-
 		return null;
 	}
+
+    private Instruction reflectionInstanceGenerator(String ins){
+        try {
+            String capitalIns = ins.charAt(0).toUpperCase() + ins.substring(1).toLowerCase();
+            String InstructionClass = capitalIns + "Instruction";
+            return (Instruction) Class.forName(InstructionClass).newInstance();
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
 
 	/*
 	 * Return the first word of line and remove it from line. If there is no
