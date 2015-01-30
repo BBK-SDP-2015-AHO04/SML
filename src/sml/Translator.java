@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.lang.reflect.Constructor;
 
 /*
  * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
@@ -125,9 +126,15 @@ public class Translator {
 
     private Instruction reflectionInstanceGenerator(String ins){
         try {
-            String capitalIns = ins.charAt(0).toUpperCase() + ins.substring(1).toLowerCase();
-            String InstructionClass = capitalIns + "Instruction";
-            return (Instruction) Class.forName(InstructionClass).newInstance();
+            if(ins != null) {
+                String capitalIns = ins.charAt(0).toUpperCase() + ins.substring(1).toLowerCase();
+                String InstructionClass = capitalIns + "Instruction";
+                //Instruction result =  (Instruction) Class.forName(InstructionClass).newInstance();
+                //add code for constructor
+                Constructor.newInstance();
+                Constructor[] constructorList= result.getConstructors();
+                return result;
+            } else throw new NullPointerException();
         } catch (Exception ex){
             ex.printStackTrace();
         }
