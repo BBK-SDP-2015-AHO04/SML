@@ -2,9 +2,9 @@ package sml;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.lang.reflect.Constructor;
 
 /*
@@ -50,6 +50,7 @@ public class Translator {
 				String label = scan();
 
 				if (label.length() > 0) {
+                    //Instruction ins = reflectionInstanceGenerator(label);
 					Instruction ins = getInstruction(label);
 					if (ins != null) {
 						labels.addLabel(label);
@@ -83,10 +84,6 @@ public class Translator {
 			return null;
 
 		String ins = scan();
-
-        //ReflectionInstanceGenerator rig = new ReflectionInstanceGenerator(this,ins);
-        //or
-        //Instruction reflectionInstanceGenerator(ins);
 
 		switch (ins) {
 		case "add":
@@ -124,21 +121,75 @@ public class Translator {
 		return null;
 	}
 
-    private Instruction reflectionInstanceGenerator(String ins){
-        try {
-            if(ins != null) {
-                String capitalIns = ins.charAt(0).toUpperCase() + ins.substring(1).toLowerCase();
-                String InstructionClass = capitalIns + "Instruction";
-                //Instruction result =  (Instruction) Class.forName(InstructionClass).newInstance();
-                //add code for constructor
-                Constructor.newInstance();
-                Constructor[] constructorList= result.getConstructors();
-                return result;
-            } else throw new NullPointerException();
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
+//    private Instruction reflectionInstanceGenerator(String label){
+//        try {
+//            if(label != null) {
+//                //work out which instruction type to create
+//                if(line.equals("")){return null;}
+//                String ins = scan();
+//                String capitalIns = ins.substring(0, 1).toUpperCase() + ins.substring(1).toLowerCase();
+//                String instClassName = capitalIns + "Instruction";
+//                Class<?> instructionClass = Class.forName(instClassName);
+//                //define the parameters and their corresponding types given in the instruction
+//                List<Class> operandTypes = new ArrayList<>();               // would List<Type> work better?
+//                List<String> operandsToBeCast = new ArrayList<>();
+//                while(line.length() != 0){
+//                    String scannedWord = scan();
+//                    //is operand an Integer or a String?
+//                    if(Character.isDigit(scannedWord.charAt(0))){
+//                        operandTypes.add(Integer.class);
+//                        if(scannedWord.length() == 0) {
+//                            operandsToBeCast.add(Integer.MAX_VALUE.toString());
+//                        } else {
+//                            operandsToBeCast.add(scannedWord);
+//                        }
+//                    } else {
+//                        operandTypes.add(String.class);
+//                        operandsToBeCast.add(scannedWord);
+//                    }
+//                }
+//                //find the matching constructor to use
+//                Constructor[] constructorList= instructionClass.getDeclaredConstructors();
+//                for(Constructor ctor: constructorList){
+//                    Class<?>[] paramType = ctor.getParameterTypes();
+//                    if(paramType.length == operandTypes.size()) {
+//                        boolean allTypesMatch = true;
+//                        for(int i = 0; i < paramType.length; i++) {
+//                            if(!paramType[i].equals(operandTypes.get(i))){
+//                                allTypesMatch = false;
+//                            }
+//                        }
+//                        if(allTypesMatch){
+//                            //generate instruction parameters to for constructor
+//                            try {
+//                                ctor.setAccessible(true);
+//                                Object[] initArgs = new Object[paramType.length];
+//                                for(int=0;i<paramType.length;i++){
+//                                    if(paramType[i].getClass() == Integer.class) {
+//                                        initArgs[i] = Integer.parseInt(operandsToBeCast[i]);
+//                                    } else {
+//                                        initArgs[i] = operandsToBeCast[i];
+//                                    }
+//                                }
+//                                return (Instruction)ctor.newInstance(initArgs);
+//                            } catch (InstantiationException ex){
+//                                ex.printStackTrace();
+//                            } catch (IllegalAccessException ex){
+//                                ex.printStackTrace();
+//                            } catch (InvocationTargetException ex){
+//                                ex.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//                return null;
+//            } else throw new NullPointerException();
+//        } catch (ClassNotFoundException ex) {
+//            ex.printStackTrace();
+//        } catch (Exception ex){
+//            ex.printStackTrace();
+//        }
+//    }
 
 
 	/*
