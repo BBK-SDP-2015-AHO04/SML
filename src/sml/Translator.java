@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.lang.reflect.Constructor;
+import java.lang.Class.*;
+import java.lang.reflect.*;
 
 /*
  * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
@@ -124,22 +126,26 @@ public class Translator {
     private Instruction reflectionInstanceGenerator(String label) {
         try {
             if (label != null) {
+//                System.out.println(label);
                 //work out which type of instruction class to create
                 if (line.equals("")) {
                     return null;
                 }
                 String ins = scan();
                 String capitalIns = ins.substring(0, 1).toUpperCase() + ins.substring(1).toLowerCase();
-                String instClassName = capitalIns + "Instruction";
-                Class<?> instructionClass = Class.forName(instClassName);
+                String instClassName = "sml." + capitalIns + "Instruction";
+//                System.out.println(instClassName);
+                Class instructionClass = Class.forName(instClassName);
                 //define the parameters and their corresponding types given in the instruction
-                List<Class> operandTypes = new ArrayList<>();               // would List<Type> work better?
+                List<Class> operandTypes = new ArrayList<>();
+                operandTypes.add(String.class);
                 List<String> operandsToBeCast = new ArrayList<>();
+                operandsToBeCast.add(label);
                 while (line.length() != 0) {
                     String scannedWord = scan();
                     //is operand an Integer or a String?
                     if (Character.isDigit(scannedWord.charAt(0))) {
-                        operandTypes.add(Integer.class);
+                        operandTypes.add(int.class);
                         if (scannedWord.length() == 0) {
                             operandsToBeCast.add("MAX_VALUE");
                         } else {
@@ -150,14 +156,20 @@ public class Translator {
                         operandsToBeCast.add(scannedWord);
                     }
                 }
+                // check that method is reading in correct instruction parameters
+//                System.out.println("Operand Types: " + operandTypes.toString());
+//                System.out.println("Operands: " + operandsToBeCast.toString());
+
                 //find the matching constructor to use
                 Constructor[] constructorList = instructionClass.getDeclaredConstructors();
                 for (Constructor ctor : constructorList) {
-                    Class<?>[] paramType = ctor.getParameterTypes();
-                    if (paramType.length == operandTypes.size()) {
+                    Class[] paramTypes = ctor.getParameterTypes();
+//                    System.out.println("paramType - number of parameters: " + paramType.length);
+//                    System.out.println("operandTypes - number of parameters: " + operandTypes.size());
+                    if (paramTypes.length == operandTypes.size()) {
                         boolean allTypesMatch = true;
-                        for (int i = 0; i < paramType.length; i++) {
-                            if (!paramType[i].equals(operandTypes.get(i))) {
+                        for (int i = 0; i < paramTypes.length; i++) {
+                            if (!paramTypes[i].equals(operandTypes.get(i))) {
                                 allTypesMatch = false;
                             }
                         }
@@ -165,9 +177,9 @@ public class Translator {
                             //generate instruction parameters to for constructor
                             try {
                                 ctor.setAccessible(true);
-                                Object[] initArgs = new Object[paramType.length];
-                                for (int i = 0; i < paramType.length; i++) {
-                                    if (paramType[i].getClass().equals(Integer.class)) {
+                                Object[] initArgs = new Object[paramTypes.length];
+                                for (int i = 0; i < paramTypes.length; i++) {
+                                    if (paramTypes[i].getClass().equals(int.class)) {
                                         if (operandsToBeCast.get(i).equals("MAX_VALUE")) {
                                             initArgs[i] = Integer.MAX_VALUE;
                                         } else {
@@ -176,6 +188,10 @@ public class Translator {
                                     } else {
                                         initArgs[i] = operandsToBeCast.get(i);
                                     }
+                                }
+                                System.out.println("The initArgs Object array has " + initArgs.length + " elements.");
+                                for(Object o: initArgs){
+                                    System.out.println("initArgs parameters for " + ctor.getDeclaringClass() + " are: "+ o.toString());
                                 }
                                 return (Instruction) ctor.newInstance(initArgs);
                             } catch (InstantiationException ex) {
