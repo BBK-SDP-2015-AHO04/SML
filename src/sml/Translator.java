@@ -126,7 +126,6 @@ public class Translator {
     private Instruction reflectionInstanceGenerator(String label) {
         try {
             if (label != null) {
-//                System.out.println(label);
                 //work out which type of instruction class to create
                 if (line.equals("")) {
                     return null;
@@ -134,10 +133,9 @@ public class Translator {
                 String ins = scan();
                 String capitalIns = ins.substring(0, 1).toUpperCase() + ins.substring(1).toLowerCase();
                 String instClassName = "sml." + capitalIns + "Instruction";
-//                System.out.println(instClassName);
                 Class instructionClass = Class.forName(instClassName);
                 //define the parameters and their corresponding types given in the instruction
-                List<Class> operandTypes = new ArrayList<>();
+                List<Class<?>> operandTypes = new ArrayList<>();
                 operandTypes.add(String.class);
                 List<String> operandsToBeCast = new ArrayList<>();
                 operandsToBeCast.add(label);
@@ -164,8 +162,6 @@ public class Translator {
                 Constructor[] constructorList = instructionClass.getDeclaredConstructors();
                 for (Constructor ctor : constructorList) {
                     Class[] paramTypes = ctor.getParameterTypes();
-//                    System.out.println("paramType - number of parameters: " + paramType.length);
-//                    System.out.println("operandTypes - number of parameters: " + operandTypes.size());
                     if (paramTypes.length == operandTypes.size()) {
                         boolean allTypesMatch = true;
                         for (int i = 0; i < paramTypes.length; i++) {
@@ -174,26 +170,26 @@ public class Translator {
                             }
                         }
                         if (allTypesMatch) {
-                            //generate instruction parameters to for constructor
+                            //generate instruction parameters for constructor
                             try {
                                 ctor.setAccessible(true);
                                 Object[] initArgs = new Object[paramTypes.length];
-                                for (int i = 0; i < paramTypes.length; i++) {
-                                    if (paramTypes[i].getClass().equals(int.class)) {
+                                for (int i = 0; i < operandTypes.size(); i++) {
+                                    if (operandTypes.get(i).getCanonicalName().equals("int")) {
                                         if (operandsToBeCast.get(i).equals("MAX_VALUE")) {
                                             initArgs[i] = Integer.MAX_VALUE;
                                         } else {
                                             initArgs[i] = Integer.parseInt(operandsToBeCast.get(i));
                                         }
                                     } else {
-                                        initArgs[i] = operandsToBeCast.get(i);
+                                        initArgs[i] = (String)operandsToBeCast.get(i);
                                     }
                                 }
-                                System.out.println("The initArgs Object array has " + initArgs.length + " elements.");
                                 for(Object o: initArgs){
-                                    System.out.println("initArgs parameters for " + ctor.getDeclaringClass() + " are: "+ o.toString());
+//                                    System.out.println("initArgs parameters for " + ctor.getDeclaringClass() + " are: "+ o.toString() + " which is of type: " + o.getClass());
                                 }
-                                return (Instruction) ctor.newInstance(initArgs);
+                                Instruction result = (Instruction) ctor.newInstance(initArgs);
+                                return result;
                             } catch (InstantiationException ex) {
                                 ex.printStackTrace();
                             } catch (IllegalAccessException ex) {
